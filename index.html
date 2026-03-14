@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#8B5CF6">
+    <title>Algorithm as Recipe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Page 1: Intro -->
+    <div class="page active" id="page1">
+        <div class="intro-content">
+            <div class="book-cover">
+                <span class="icon">🍳</span>
+                <h2>Algorithm as Recipe</h2>
+                <p>Smart Cooking Guide</p>
+            </div>
+            <h1 class="intro-title">Welcome Chef!</h1>
+            <p class="intro-subtitle">Tell me what's in your fridge and I'll recommend the perfect recipes for you</p>
+            <button class="btn btn-primary" onclick="goToPage(2)">
+                <i class="fas fa-utensils"></i>
+                Start Cooking
+            </button>
+        </div>
+    </div>
+
+    <!-- Page 2: Ingredient Selection -->
+    <div class="page" id="page2">
+        <div class="page-header">
+            <h1>Select Ingredients</h1>
+            <p>Choose what you have in your fridge</p>
+        </div>
+
+        <div class="section-header">
+            <h3>🥩 Main Proteins</h3>
+            <p>Pick your main ingredient</p>
+        </div>
+        <div class="card-grid" id="mainIngredients"></div>
+
+        <div class="section-header">
+            <h3>🧄 Aromatics</h3>
+            <p>Essential flavor boosters</p>
+        </div>
+        <div class="card-grid" id="aromatics"></div>
+
+        <div class="section-header">
+            <h3>🥬 Vegetables</h3>
+            <p>Add some greens</p>
+        </div>
+        <div class="card-grid" id="vegetables"></div>
+
+        <!-- <div class="swipe-indicator">
+            <i class="fas fa-arrow-down"></i> Scroll to see more
+        </div> -->
+    </div>
+
+    <!-- Page 3: Confirmation -->
+    <div class="page" id="page3">
+        <div class="page-header">
+            <h1>Confirm Selection</h1>
+            <p>Are these the ingredients you chose?</p>
+        </div>
+
+        <div class="bowl-container">
+            <!-- <div class="bowl-svg">
+                <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                    <ellipse cx="100" cy="100" rx="80" ry="40" fill="#4B5563" opacity="0.3"/>
+                    <path d="M 30 100 Q 30 150 100 170 Q 170 150 170 100 L 170 90 Q 170 60 100 60 Q 30 60 30 90 Z" 
+                          fill="#6B7280" stroke="#9CA3AF" stroke-width="2"/>
+                </svg>
+            </div> -->
+            <div class="ingredients-list" id="selectedIngredientsList"></div>
+        </div>
+
+        <div class="empty-state" id="emptyIngredients" style="display: none;">
+            <div class="icon">🍽️</div>
+            <p>No ingredients selected yet.<br>Go back and choose some!</p>
+        </div>
+    </div>
+
+    <!-- Page 4: Cooking Tools -->
+    <div class="page" id="page4">
+        <div class="page-header">
+            <h1>Cooking Tools</h1>
+            <p>What equipment do you have?</p>
+        </div>
+
+        <div class="section-header">
+            <h3>🔥 Heat-Based Tools</h3>
+            <p>Stoves, ovens, and more</p>
+        </div>
+        <div class="card-grid" id="heatTools"></div>
+
+        <div class="section-header">
+            <h3>🔪 Non-Heat Tools</h3>
+            <p>Knives, boards, and utensils</p>
+        </div>
+        <div class="card-grid" id="nonHeatTools"></div>
+    </div>
+
+    <!-- Page 5: User Profile -->
+    <div class="page" id="page5">
+        <div class="page-header">
+            <h1>Your Profile</h1>
+            <p>Help us personalize your recipes</p>
+        </div>
+
+        <form id="profileForm">
+            <div class="form-group">
+                <label>👤 Gender</label>
+                <div class="radio-grid">
+                    <div class="radio-card" data-name="gender" data-value="male">
+                        <span class="icon">👨</span>
+                        <div class="label">Male</div>
+                    </div>
+                    <div class="radio-card" data-name="gender" data-value="female">
+                        <span class="icon">👩</span>
+                        <div class="label">Female</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🎂 Age Group</label>
+                <div class="radio-grid">
+                    <div class="radio-card" data-name="age" data-value="20s">
+                        <span class="icon">🧑</span>
+                        <div class="label">20s</div>
+                    </div>
+                    <div class="radio-card" data-name="age" data-value="30s">
+                        <span class="icon">👨‍💼</span>
+                        <div class="label">30s</div>
+                    </div>
+                    <div class="radio-card" data-name="age" data-value="40s">
+                        <span class="icon">👨‍🦰</span>
+                        <div class="label">40s</div>
+                    </div>
+                    <div class="radio-card" data-name="age" data-value="50s+">
+                        <span class="icon">👨‍🦳</span>
+                        <div class="label">50s+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>👨‍🍳 Skill Level</label>
+                <div class="radio-grid">
+                    <div class="radio-card" data-name="skill" data-value="beginner">
+                        <span class="icon">🌱</span>
+                        <div class="label">Beginner</div>
+                    </div>
+                    <div class="radio-card" data-name="skill" data-value="intermediate">
+                        <span class="icon">⭐</span>
+                        <div class="label">Intermediate</div>
+                    </div>
+                    <div class="radio-card" data-name="skill" data-value="advanced">
+                        <span class="icon">🏆</span>
+                        <div class="label">Advanced</div>
+                    </div>
+                    <div class="radio-card" data-name="skill" data-value="expert">
+                        <span class="icon">👑</span>
+                        <div class="label">Expert</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>🍜 Cuisine Preference</label>
+                <div class="radio-grid">
+                    <div class="radio-card" data-name="cuisine" data-value="korean">
+                        <span class="icon">🇰🇷</span>
+                        <div class="label">Korean</div>
+                    </div>
+                    <div class="radio-card" data-name="cuisine" data-value="chinese">
+                        <span class="icon">🇨🇳</span>
+                        <div class="label">Chinese</div>
+                    </div>
+                    <div class="radio-card" data-name="cuisine" data-value="japanese">
+                        <span class="icon">🇯🇵</span>
+                        <div class="label">Japanese</div>
+                    </div>
+                    <div class="radio-card" data-name="cuisine" data-value="western">
+                        <span class="icon">🇺🇸</span>
+                        <div class="label">Western</div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Page 6: Results -->
+    <div class="page" id="page6">
+        <div class="page-header">
+            <h1>🎉 Your Perfect Recipes</h1>
+            <p>Top 3 matches based on your selections</p>
+        </div>
+
+        <div id="resultsContainer"></div>
+
+        <button class="btn btn-secondary" onclick="resetApp()" style="margin-top: 20px;">
+            <i class="fas fa-redo"></i>
+            Start Over
+        </button>
+    </div>
+
+    <!-- Page 7: Recipe Steps -->
+<div class="page" id="page7">
+    <div class="page-header">
+        <h1 id="recipeTitle"></h1>
+        <p>Step-by-step cooking guide</p>
+    </div>
+
+    <div id="recipeSteps" style="margin-top:20px;"></div>
+</div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="nav-btn nav-btn-back" id="backBtn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+            Back
+        </button>
+        <button class="nav-btn nav-btn-next" id="nextBtn" onclick="goNext()">
+            Next
+            <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- Overlay for alerts -->
+    <div class="overlay" id="overlay"></div>
+
+    <script>
+        // Data
+        const ingredients = {
+            main: [
+                { id: 'beef', icon: '🥩', label: 'Beef' },
+                { id: 'pork', icon: '🥓', label: 'Pork' },
+                { id: 'chicken', icon: '🍗', label: 'Chicken' },
+                { id: 'tofu', icon: '🧈', label: 'Tofu' },
+                { id: 'egg', icon: '🥚', label: 'Egg' },
+                { id: 'shrimp', icon: '🦐', label: 'Shrimp' },
+                { id: 'fish', icon: '🐟', label: 'Fish' }
+            ],
+            aromatics: [
+                { id: 'onion', icon: '🧅', label: 'Onion' },
+                { id: 'garlic', icon: '🧄', label: 'Garlic' },
+                { id: 'ginger', icon: '🫚', label: 'Ginger' },
+                { id: 'scallion', icon: '🌱', label: 'Scallion' },
+                { id: 'salt', icon: '🧂', label: 'Salt' }
+            ],
+            vegetables: [
+                { id: 'tomato', icon: '🍅', label: 'Tomato' },
+                { id: 'cabbage', icon: '🥬', label: 'Cabbage' },
+                { id: 'carrot', icon: '🥕', label: 'Carrot' },
+                { id: 'mushroom', icon: '🍄', label: 'Mushroom' },
+                { id: 'pepper', icon: '🌶️', label: 'Pepper' },
+                { id: 'potato', icon: '🥔', label: 'Potato' }
+            ]
+        };
+
+        const tools = {
+            heat: [
+                { id: 'stove', icon: '🔥', label: 'Stove' },
+                { id: 'oven', icon: '🔥', label: 'Oven' },
+                { id: 'microwave', icon: '📻', label: 'Microwave' },
+                { id: 'pan', icon: '🍳', label: 'Frying Pan' },
+                { id: 'pot', icon: '🍲', label: 'Pot' },
+                { id: 'grill', icon: '🔥', label: 'Grill' }
+            ],
+            nonHeat: [
+                { id: 'knife', icon: '🔪', label: 'Knife' },
+                { id: 'board', icon: '📋', label: 'Cutting Board' },
+                { id: 'bowl', icon: '🥣', label: 'Bowl' },
+                { id: 'whisk', icon: '🥄', label: 'Whisk' },
+                { id: 'grater', icon: '🧀', label: 'Grater' },
+                { id: 'peeler', icon: '🔧', label: 'Peeler' }
+            ]
+        };
+
+        const recipes = [
+            {
+                id: 'bulgogi',
+                name: 'Bulgogi',
+                cuisine: 'Korean',
+                difficulty: 'intermediate',
+                ingredients: ['beef', 'onion', 'garlic', 'scallion'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Sweet and savory marinated beef, a Korean BBQ classic',
+                icon: '🥩',
+                steps: [
+                    'Slice beef thinly.',
+                    'Chop onion, garlic, and scallions.',
+                    'Mix soy sauce, sugar, and garlic to make marinade.',
+                    'Marinate beef for 15 minutes.',
+                    'Heat a pan and cook beef with onion.',
+                    'Garnish with scallions and serve.'
+                ]
+            },
+            {
+                id: 'kimchi-stew',
+                name: 'Kimchi Stew',
+                cuisine: 'Korean',
+                difficulty: 'beginner',
+                ingredients: ['pork', 'cabbage', 'onion', 'tofu'],
+                tools: ['pot', 'knife', 'board'],
+                description: 'Spicy and hearty Korean stew with kimchi',
+                icon: '🍲',
+                steps: [
+                   'Cut pork into small pieces.',
+                    'Chop onion and cabbage.',
+                    'Heat a pot and cook pork until lightly browned.',
+                    'Add cabbage and onion and stir for 2 minutes.',
+                    'Pour in water and bring to a boil.',
+                    'Add tofu pieces and simmer for 10 minutes.',
+                    'Serve hot.'
+                    ]
+            },
+            {
+                id: 'mapo-tofu',
+                name: 'Mapo Tofu',
+                cuisine: 'Chinese',
+                difficulty: 'intermediate',
+                ingredients: ['tofu', 'pork', 'garlic', 'scallion', 'ginger'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Spicy Sichuan tofu dish with minced meat',
+                icon: '🌶️',
+                steps: [
+                    'Cut tofu into cubes.',
+                    'Mince pork and chop garlic, ginger, and scallions.',
+                    'Heat a pan with oil.',
+                    'Cook pork until browned.',
+                    'Add garlic and ginger and stir briefly.',
+                    'Add tofu and a little water or sauce.',
+                    'Simmer for 5 minutes.',
+                    'Garnish with scallions and serve.'
+                ]
+            },
+            {
+                id: 'fried-rice',
+                name: 'Fried Rice',
+                cuisine: 'Chinese',
+                difficulty: 'beginner',
+                ingredients: ['egg', 'onion', 'carrot', 'scallion', 'salt'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Classic Chinese fried rice with vegetables',
+                icon: '🍚',
+                steps: [
+                    'Chop onion, carrot, and scallions.',
+                    'Crack eggs into a bowl and whisk.',
+                    'Heat a pan with oil.',
+                    'Scramble the eggs and set aside.',
+                    'Cook onion and carrot until soft.',
+                    'Add cooked rice and stir fry.',
+                    'Add eggs back and season with salt.',
+                    'Top with scallions and serve.'
+                ]
+            },
+            {
+                id: 'tonkatsu',
+                name: 'Tonkatsu',
+                cuisine: 'Japanese',
+                difficulty: 'intermediate',
+                ingredients: ['pork', 'cabbage', 'egg'],
+                tools: ['pan', 'knife', 'board', 'bowl'],
+                description: 'Crispy breaded pork cutlet, Japanese style',
+                icon: '🥩',
+                steps: [
+                    'Slice pork into cutlets.',
+                    'Crack egg into a bowl and whisk.',
+                    'Dip pork into egg.',
+                    'Coat pork with breadcrumbs.',
+                    'Heat oil in a pan.',
+                    'Fry pork until golden brown on both sides.',
+                    'Slice cabbage thinly.',
+                    'Serve pork cutlet with cabbage.'
+                ]
+            },
+            {
+                id: 'gyudon',
+                name: 'Gyudon',
+                cuisine: 'Japanese',
+                difficulty: 'beginner',
+                ingredients: ['beef', 'onion', 'scallion'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Savory beef bowl with sweet sauce',
+                icon: '🍜',
+                steps: [
+                    'Slice beef thinly.',
+                    'Chop onion and scallions.',
+                    'Heat a pan with a little oil.',
+                    'Cook onion until soft.',
+                    'Add beef and cook quickly.',
+                    'Add soy sauce and a little sugar.',
+                    'Simmer for a few minutes.',
+                    'Serve over rice and garnish with scallions.'
+                ]
+            },
+            {
+                id: 'steak',
+                name: 'Steak',
+                cuisine: 'Western',
+                difficulty: 'intermediate',
+                ingredients: ['beef', 'garlic', 'salt', 'mushroom'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Juicy grilled steak with garlic butter',
+                icon: '🥩',
+                stpes: [
+                    'Season the beef with salt.',
+                    'Chop garlic and mushrooms.',
+                    'Heat a pan on high heat.',
+                    'Sear the steak for 3-4 minutes each side.',
+                    'Add garlic and mushrooms to the pan.',
+                    'Cook mushrooms until soft.',
+                    'Rest the steak for a few minutes.',
+                    'Slice and serve.'
+                ]
+            },
+            {
+                id: 'carbonara',
+                name: 'Carbonara',
+                cuisine: 'Western',
+                difficulty: 'advanced',
+                ingredients: ['pork', 'egg', 'garlic'],
+                tools: ['pot', 'pan', 'knife', 'board', 'whisk'],
+                description: 'Creamy Italian pasta with bacon and egg',
+                icon: '🍝',
+                steps: [
+                    'Boil pasta in a pot of salted water.',
+                    'Chop pork and garlic.',
+                    'Cook pork in a pan until crispy.',
+                    'Add garlic and cook briefly.',
+                    'Whisk eggs in a bowl.',
+                    'Drain pasta and add to the pan.',
+                    'Turn off heat and mix with eggs quickly.',
+                    'Serve immediately.'
+                ]
+            },
+            {
+                id: 'omelette',
+                name: 'Omelette',
+                cuisine: 'Western',
+                difficulty: 'beginner',
+                ingredients: ['egg', 'onion', 'tomato', 'pepper', 'salt'],
+                tools: ['pan', 'knife', 'board', 'whisk'],
+                description: 'Fluffy egg omelette with vegetables',
+                icon: '🍳',
+                steps: [
+                    'Chop onion, tomato, and pepper.',
+                    'Crack eggs into a bowl and whisk.',
+                    'Heat a pan with oil.',
+                    'Cook vegetables for 2-3 minutes.',
+                    'Pour eggs into the pan.',
+                    'Cook until eggs set.',
+                    'Fold the omelette in half.',
+                    'Serve warm.'
+                ]
+            },
+            {
+                id: 'shrimp-stir-fry',
+                name: 'Shrimp Stir Fry',
+                cuisine: 'Chinese',
+                difficulty: 'beginner',
+                ingredients: ['shrimp', 'garlic', 'onion', 'pepper', 'salt'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Quick and tasty shrimp with vegetables',
+                icon: '🦐',
+                steps: [
+                    'Peel and clean the shrimp.',
+                    'Chop garlic, onion, and pepper.',
+                    'Heat oil in a pan.',
+                    'Cook garlic until fragrant.',
+                    'Add shrimp and cook until pink.',
+                    'Add onion and pepper.',
+                    'Season with salt and stir fry.',
+                    'Serve hot.'
+                ]
+            },
+            {
+                id: 'grilled-fish',
+                name: 'Grilled Fish',
+                cuisine: 'Western',
+                difficulty: 'beginner',
+                ingredients: ['fish', 'garlic', 'salt'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Simple pan-grilled fish with garlic',
+                icon: '🐟',
+                steps: [
+                    'Clean and pat dry the fish.',
+                    'Season fish with salt.',
+                    'Chop garlic.',
+                    'Heat oil in a pan.',
+                    'Place fish in the pan and cook 4-5 minutes.',
+                    'Flip and cook the other side.',
+                    'Add garlic to the pan for flavor.',
+                    'Serve hot.'
+                ]
+            },
+            {
+                id: 'fish-soup',
+                name: 'Fish Soup',
+                cuisine: 'Korean',
+                difficulty: 'beginner',
+                ingredients: ['fish', 'garlic', 'scallion', 'onion'],
+                tools: ['pot', 'knife', 'board'],
+                description: 'Light and comforting Korean fish soup',
+                icon: '🍲',
+                steps: [
+                    'Cut fish into pieces.',
+                    'Chop garlic, scallions, and onion.',
+                    'Heat a pot with water.',
+                    'Add fish and bring to a boil.',
+                    'Add garlic and onion.',
+                    'Simmer for 10 minutes.',
+                    'Add scallions at the end.',
+                    'Serve hot.'
+                ]
+            },
+            {
+                id: 'teriyaki-fish',
+                name: 'Teriyaki Fish',
+                cuisine: 'Japanese',
+                difficulty: 'intermediate',
+                ingredients: ['fish', 'ginger', 'garlic'],
+                tools: ['pan', 'knife', 'board'],
+                description: 'Sweet soy glazed Japanese fish',
+                icon: '🐟',
+                steps: [
+                    'Pat fish dry.',
+                    'Chop garlic and ginger.',
+                    'Heat a pan with oil.',
+                    'Cook fish on one side for 3-4 minutes.',
+                    'Flip the fish.',
+                    'Add soy sauce and a little sugar.',
+                    'Add garlic and ginger.',
+                    'Cook until sauce thickens and serve.'
+                ]
+            }
+        ];
+
+        // State
+        let currentPage = 1;
+        const totalPages = 7;
+        let selectedIngredients = [];
+        let selectedTools = [];
+        let userProfile = {};
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            renderIngredients();
+            renderTools();
+            setupRadioCards();
+            updateNavigation();
+            updateProgress();
+        });
+
+        // Render functions
+        function renderIngredients() {
+            renderCards('mainIngredients', ingredients.main, 'ingredient');
+            renderCards('aromatics', ingredients.aromatics, 'ingredient');
+            renderCards('vegetables', ingredients.vegetables, 'ingredient');
+        }
+
+        function renderTools() {
+            renderCards('heatTools', tools.heat, 'tool');
+            renderCards('nonHeatTools', tools.nonHeat, 'tool');
+        }
+
+        function renderCards(containerId, items, type) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = items.map(item => `
+                <div class="card" data-id="${item.id}" data-type="${type}" onclick="toggleCard(this, '${type}')">
+                    <span class="icon">${item.icon}</span>
+                    <div class="label">${item.label}</div>
+                </div>
+            `).join('');
+        }
+
+        function setupRadioCards() {
+            document.querySelectorAll('.radio-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    const name = this.dataset.name;
+                    const value = this.dataset.value;
+                    
+                    // Deselect siblings
+                    document.querySelectorAll(`.radio-card[data-name="${name}"]`).forEach(c => {
+                        c.classList.remove('selected');
+                    });
+                    
+                    // Select this card
+                    this.classList.add('selected');
+                    userProfile[name] = value;
+                });
+            });
+        }
+
+        // Card selection
+        function toggleCard(element, type) {
+            const id = element.dataset.id;
+            element.classList.toggle('selected');
+            
+            if (type === 'ingredient') {
+                if (selectedIngredients.includes(id)) {
+                    selectedIngredients = selectedIngredients.filter(i => i !== id);
+                } else {
+                    selectedIngredients.push(id);
+                }
+            } else if (type === 'tool') {
+                if (selectedTools.includes(id)) {
+                    selectedTools = selectedTools.filter(i => i !== id);
+                } else {
+                    selectedTools.push(id);
+                }
+            }
+        }
+
+        // Navigation
+        function goToPage(pageNum) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            
+            // Show target page
+            document.getElementById(`page${pageNum}`).classList.add('active');
+            currentPage = pageNum;
+            
+            // Special actions for certain pages
+            if (pageNum === 3) {
+                updateConfirmationPage();
+            } else if (pageNum === 6) {
+                generateRecommendations();
+            }
+            
+            updateNavigation();
+            updateProgress();
+            window.scrollTo(0, 0);
+        }
+
+        function goNext() {
+            if (currentPage === 2 && selectedIngredients.length === 0) {
+                showAlert('⚠️ Oops!', 'Please select at least one ingredient');
+                return;
+            }
+            
+            if (currentPage === 4 && selectedTools.length === 0) {
+                showAlert('⚠️ Oops!', 'Please select at least one cooking tool');
+                return;
+            }
+            
+            if (currentPage === 5) {
+                if (!userProfile.gender || !userProfile.age || !userProfile.skill || !userProfile.cuisine) {
+                    showAlert('⚠️ Oops!', 'Please complete your profile');
+                    return;
+                }
+            }
+            
+            if (currentPage < totalPages) {
+                goToPage(currentPage + 1);
+            }
+        }
+
+        function goBack() {
+            if (currentPage > 1) {
+                goToPage(currentPage - 1);
+            }
+        }
+
+        function updateNavigation() {
+            const backBtn = document.getElementById('backBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            
+            backBtn.style.display = currentPage === 1 ? 'none' : 'flex';
+            
+            if (currentPage === 6) {
+                nextBtn.style.display = 'none';
+            } else if (currentPage === 5) {
+                nextBtn.innerHTML = '<i class="fas fa-magic"></i> Get Recipes';
+                nextBtn.style.display = 'flex';
+            } else {
+                nextBtn.innerHTML = 'Next <i class="fas fa-arrow-right"></i>';
+                nextBtn.style.display = 'flex';
+            }
+        }
+
+        function updateProgress() {
+            const progress = (currentPage / totalPages) * 100;
+            document.getElementById('progressFill').style.width = progress + '%';
+        }
+
+        // Confirmation page
+        function updateConfirmationPage() {
+            const container = document.getElementById('selectedIngredientsList');
+            const emptyState = document.getElementById('emptyIngredients');
+            
+            if (selectedIngredients.length === 0) {
+                container.style.display = 'none';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'flex';
+            emptyState.style.display = 'none';
+            
+            const allIngredients = [...ingredients.main, ...ingredients.aromatics, ...ingredients.vegetables];
+            const selected = allIngredients.filter(i => selectedIngredients.includes(i.id));
+            
+            container.innerHTML = selected.map(item => `
+                <span class="ingredient-tag">${item.icon} ${item.label}</span>
+            `).join('');
+        }
+
+        // Recommendations
+        function generateRecommendations() {
+            const container = document.getElementById('resultsContainer');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>Finding your perfect recipes...</p></div>';
+            
+            setTimeout(() => {
+                const scored = recipes.map(recipe => {
+                    let score = 0;
+                    
+                    // Ingredient matching (40 points)
+                    const matchingIngredients = recipe.ingredients.filter(i => selectedIngredients.includes(i)).length;
+                    const ingredientScore = (matchingIngredients / recipe.ingredients.length) * 40;
+                    score += ingredientScore;
+                    
+                    // Tool availability (30 points)
+                    const requiredTools = recipe.tools.filter(t => selectedTools.includes(t)).length;
+                    const toolScore = (requiredTools / recipe.tools.length) * 30;
+                    score += toolScore;
+                    
+                    // Difficulty match (20 points)
+                    const skillLevels = ['beginner', 'intermediate', 'advanced', 'expert'];
+                    const userSkillIndex = skillLevels.indexOf(userProfile.skill);
+                    const recipeSkillIndex = skillLevels.indexOf(recipe.difficulty);
+                    const difficultyScore = Math.max(0, 20 - Math.abs(userSkillIndex - recipeSkillIndex) * 7);
+                    score += difficultyScore;
+                    
+                    // Cuisine preference (10 points)
+                    if (recipe.cuisine.toLowerCase() === userProfile.cuisine) {
+                        score += 10;
+                    }
+                    
+                    return { ...recipe, score: Math.round(score) };
+                });
+                
+                // Sort by score and get top 3
+                const top3 = scored.sort((a, b) => b.score - a.score).slice(0, 3);
+                
+                container.innerHTML = top3.map((recipe, index) => `
+                    <div class="result-card" onclick="openRecipe('${recipe.id}')">
+                        <div class="result-rank">#${index + 1}</div>
+                        <div class="result-header">
+                            <div class="result-title">${recipe.icon} ${recipe.name}</div>
+                            <span class="result-cuisine">${recipe.cuisine}</span>
+                        </div>
+                        <div class="match-score">
+                            <div class="match-bar">
+                                <div class="match-fill" style="width: ${recipe.score}%"></div>
+                            </div>
+                            <div class="match-percent">${recipe.score}%</div>
+                        </div>
+                        <div class="result-details">${recipe.description}</div>
+                        <div class="ingredients-icons">
+                            ${recipe.ingredients.map(id => {
+                                const allIngredients = [...ingredients.main, ...ingredients.aromatics, ...ingredients.vegetables];
+                                const ing = allIngredients.find(i => i.id === id);
+                                return ing ? `<span class="ingredient-icon">${ing.icon}</span>` : '';
+                            }).join('')}
+                        </div>
+                    </div>
+                `).join('');
+            }, 1500);
+        }
+ 
+        function openRecipe(recipeId) {
+
+            const recipe = recipes.find(r => r.id === recipeId);
+
+            document.getElementById("recipeTitle").innerText = recipe.name;
+
+            const stepsContainer = document.getElementById("recipeSteps");
+
+            if (!recipe.steps) {
+                stepsContainer.innerHTML = "<p>No steps available yet.</p>";
+            } else {
+                stepsContainer.innerHTML = recipe.steps.map((step, index) => `
+                    <div style="
+                        background:white;
+                        color:#333;
+                        padding:15px;
+                        border-radius:10px;
+                        margin-bottom:10px;
+                        box-shadow:0 3px 10px rgba(0,0,0,0.08);
+                    ">
+                        <strong>Step ${index + 1}</strong><br>
+                        ${step}
+                    </div>
+                `).join("");
+            }
+
+            goToPage(7);
+        }
+
+        // Alert
+        function showAlert(title, message) {
+            const overlay = document.getElementById('overlay');
+            overlay.classList.add('show');
+            
+            const alertDiv = document.createElement('div');
+            alertDiv.className = 'alert';
+            alertDiv.innerHTML = `
+                <h3>${title}</h3>
+                <p>${message}</p>
+                <button class="btn btn-primary" onclick="closeAlert()">OK</button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+        }
+
+        function closeAlert() {
+            const alert = document.querySelector('.alert');
+            const overlay = document.getElementById('overlay');
+            if (alert) alert.remove();
+            overlay.classList.remove('show');
+        }
+
+        // Reset
+        function resetApp() {
+            selectedIngredients = [];
+            selectedTools = [];
+            userProfile = {};
+            
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            document.querySelectorAll('.radio-card').forEach(c => c.classList.remove('selected'));
+            
+            goToPage(1);
+        }
+
+        // Swipe support (optional enhancement)
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', e => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                // Swipe left - next page
+                goNext();
+            }
+            
+            if (touchEndX > touchStartX + 50) {
+                // Swipe right - previous page
+                goBack();
+            }
+        }
+    </script>
+</body>
+</html>
